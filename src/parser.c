@@ -35,6 +35,8 @@ xtra_parser_circle(xtra_token_p script)
 {
     long position = -1;
 
+    printf("> script %d\n", script->size);
+
     while (++position < script->size)  {
         if (script->child[position]->type == XTRA_TOKEN_BRACKET_CURLY) {
             // go deeper
@@ -50,6 +52,10 @@ xtra_parser_circle(xtra_token_p script)
         } else if (script->child[position]->type == XTRA_TOKEN_WHILE) {
             // for confidition
             xtra_parser_while_condition(script, &position);
+        } else if (script->child[position]->type == XTRA_TOKEN_IF) {
+            // if confidition
+            printf("> if \n");
+            xtra_parser_if_condition(script, &position);
         }
     }
 }
@@ -101,6 +107,5 @@ xtra_parser_check(xtra_token_p script)
     xtra_parser_normalize_condition(script);
 
     // condition logical condition
-    xtra_parser_logical_condition(script);
     xtra_parser_circle(script);
 }

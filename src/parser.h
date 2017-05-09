@@ -11,6 +11,7 @@
 #include "token.h"
 #include "parser/logical.h"
 #include "parser/normalize.h"
+#include "if.h"
 #include "for.h"
 #include "do.h"
 #include "while.h"

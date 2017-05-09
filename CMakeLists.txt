@@ -39,6 +39,6 @@ set(SOURCE_FILES
         src/while.h
         src/do.c
         src/do.h
-        src/error.c src/error.h)
+        src/error.c src/error.h src/if.c src/if.h)
 
 add_executable(xtra ${SOURCE_FILES})

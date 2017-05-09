@@ -6,6 +6,7 @@
 #define EXTRA_NORMALIZE_H
 
 #include "../token.h"
+#include "../error.h"
 
 void
 xtra_parser_normalize_condition(xtra_token_p);

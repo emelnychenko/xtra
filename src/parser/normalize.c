@@ -15,9 +15,9 @@ xtra_parser_normalize_condition(xtra_token_p script)
             script
     );
 
-    xtra_parser_normalize_condition_curlies(
-            script
-    );
+//    xtra_parser_normalize_condition_curlies(
+//            script
+//    );
 }
 
 // else if => elseif
@@ -82,40 +82,53 @@ xtra_parser_normalize_condition_bracket_pair(xtra_token_p script, long *position
 {
     enum xtra_token_type type = script->child[*position]->type;
 
+    enum xtra_token_type qtype = type;
+    enum xtra_token_type rtype;
 
-        enum xtra_token_type qtype = type;
-        enum xtra_token_type rtype;
+    if (type == XTRA_TOKEN_BRACKET_SQUARE_L) {
+        rtype = XTRA_TOKEN_BRACKET_SQUARE;
+    } else if (type == XTRA_TOKEN_BRACKET_ROUND_L) {
+        rtype = XTRA_TOKEN_BRACKET_ROUND;
+    } else if (type == XTRA_TOKEN_BRACKET_ANGLE_L) {
+        rtype = XTRA_TOKEN_BRACKET_ANGLE;
+    } else {
+        rtype = XTRA_TOKEN_BRACKET_CURLY;
+    }
 
-        if (type == XTRA_TOKEN_BRACKET_SQUARE_L) {
-            rtype = XTRA_TOKEN_BRACKET_SQUARE;
-        } else if (type == XTRA_TOKEN_BRACKET_ROUND_L) {
-            rtype = XTRA_TOKEN_BRACKET_ROUND;
-        } else if (type == XTRA_TOKEN_BRACKET_ANGLE_L) {
-            rtype = XTRA_TOKEN_BRACKET_ANGLE;
-        } else {
-            rtype = XTRA_TOKEN_BRACKET_CURLY;
-        }
+    xtra_token_p _script = xtra_token_constuct(rtype);
+    // create bracket condition and check child bracket
 
-        xtra_token_p _script = xtra_token_constuct(rtype);
-        // create bracket condition and check child bracket
+    // forget open bracket
+    xtra_token_forget(script->child[*position]);
 
-        // forget open bracket
-        xtra_token_forget(script->child[*position]);
-        while(++(*position) < script->size) {
-            enum xtra_token_type _type = script->child[*position]->type;
+    while(++(*position) < script->size) {
+        enum xtra_token_type _type = script->child[*position]->type;
 
-            if (
-                    _type == XTRA_TOKEN_BRACKET_SQUARE_L
-                    || _type == XTRA_TOKEN_BRACKET_ROUND_L
-                    || _type == XTRA_TOKEN_BRACKET_CURLY_L
-                    || _type == XTRA_TOKEN_BRACKET_ANGLE_L
-                    ) {
-                // subtoken
-                xtra_token_add_child(
-                        _script, xtra_parser_normalize_condition_bracket_pair(script, position)
-                );
-            } else if (
-                    (qtype == XTRA_TOKEN_BRACKET_SQUARE_L && _type == XTRA_TOKEN_BRACKET_SQUARE_R)
+        if (
+                _type == XTRA_TOKEN_BRACKET_SQUARE_L
+                || _type == XTRA_TOKEN_BRACKET_ROUND_L
+                || _type == XTRA_TOKEN_BRACKET_CURLY_L
+                || _type == XTRA_TOKEN_BRACKET_ANGLE_L
+        ) {
+            printf("> child %d\n", *position);
+
+            // subtoken
+            long start = *position;
+
+            xtra_token_p _token = xtra_parser_normalize_condition_bracket_pair(script, position);
+
+            long length = *position - start;
+
+            *position -= length;
+
+            // replace condition
+            xtra_token_replace_range_by_one(
+                    script, start, length, _token
+            );
+
+            xtra_token_add_child(_script, _token);
+        } else if (
+                (qtype == XTRA_TOKEN_BRACKET_SQUARE_L && _type == XTRA_TOKEN_BRACKET_SQUARE_R)
                     || (qtype == XTRA_TOKEN_BRACKET_ROUND_L && _type == XTRA_TOKEN_BRACKET_ROUND_R)
                     || (qtype == XTRA_TOKEN_BRACKET_CURLY_L && _type == XTRA_TOKEN_BRACKET_CURLY_R)
                     || (qtype == XTRA_TOKEN_BRACKET_ANGLE_L && _type == XTRA_TOKEN_BRACKET_ANGLE_R)
@@ -153,6 +166,7 @@ xtra_parser_normalize_condition_curlies(xtra_token_p script)
                     script->child[position]
             );
         } else if (type == XTRA_TOKEN_IF) {
+            printf("if \n");
             // if () {}
             if (script->child[++position]->type != XTRA_TOKEN_BRACKET_ROUND) {
                 // error: invalid expression
@@ -250,11 +264,131 @@ xtra_parser_normalize_condition_curlies(xtra_token_p script)
 void
 xtra_parser_normalize_condition_curly(xtra_token_p script, long * position)
 {
-    if (script->child[*position]->type == XTRA_TOKEN_BRACKET_CURLY) {
+
+    enum xtra_token_type type = script->child[*position + 1]->type;
+
+    if (type == XTRA_TOKEN_BRACKET_CURLY) {
         // iterate one more time
         xtra_parser_normalize_condition_curlies(
-                script->child[*position]
+                script->child[++(*position)]
         );
+    } else if (type == XTRA_TOKEN_IF) {
+        long start = *position;
+        xtra_token_p _script = xtra_token_constuct(XTRA_TOKEN_BRACKET_CURLY);
+        xtra_token_add_child(_script, script->child[*position]);
+
+        // if () {}
+        if (script->child[++(*position)]->type != XTRA_TOKEN_BRACKET_ROUND) {
+            // error: invalid expression
+        }
+
+        xtra_token_add_child(_script, script->child[*position]);
+        xtra_parser_normalize_condition_curly(script, position);
+        xtra_token_add_child(_script, script->child[++(*position)]);
+
+        long length = *position - start;
+        *position -= length;
+
+        // replace condition
+        xtra_token_replace_range_by_one(
+                script, start, length, _script
+        );
+    } else if (type == XTRA_TOKEN_ELSEIF) {
+        long start = *position;
+        xtra_token_p _script = xtra_token_constuct(XTRA_TOKEN_BRACKET_CURLY);
+        xtra_token_add_child(_script, script->child[*position]);
+
+        // elseif () {}
+        if (script->child[++(*position)]->type != XTRA_TOKEN_BRACKET_ROUND) {
+            // error: invalid expression
+        }
+
+        xtra_token_add_child(_script, script->child[*position]);
+        xtra_parser_normalize_condition_curly(script, position);
+        xtra_token_add_child(_script, script->child[++(*position)]);
+
+        long length = *position - start;
+        *position -= length;
+
+        // replace condition
+        xtra_token_replace_range_by_one(
+                script, start, length, _script
+        );
+        // {}
+//        xtra_parser_normalize_condition_curly(
+//                script, &position
+//        );
+    } else if (type == XTRA_TOKEN_ELSE) {
+        // else
+        // {}
+//        xtra_parser_normalize_condition_curly(
+//                script, &position
+//        );
+    } else if (type == XTRA_TOKEN_SWITCH) {
+        // switch () {}
+        if (script->child[++(*position)]->type != XTRA_TOKEN_BRACKET_ROUND) {
+            // error: invalid expression
+        }
+
+        // {}
+//        xtra_parser_normalize_condition_curly(
+//                script, &position
+//        );
+    } else if (type == XTRA_TOKEN_FOR) {
+        // for () {}
+        if (script->child[++(*position)]->type != XTRA_TOKEN_BRACKET_ROUND) {
+            // error: invalid expression
+        }
+
+        // {}
+//        xtra_parser_normalize_condition_curly(
+//                script, &position
+//        );
+    } else if (type == XTRA_TOKEN_EACH) {
+        // each () {}
+        if (script->child[++(*position)]->type != XTRA_TOKEN_BRACKET_ROUND) {
+            // error: invalid expression
+        }
+
+        // {}
+//        xtra_parser_normalize_condition_curly(
+//                script, &position
+//        );
+    } else if (type == XTRA_TOKEN_FOREACH) {
+        // foreach () {}
+        if (script->child[++(*position)]->type != XTRA_TOKEN_BRACKET_ROUND) {
+            // error: invalid expression
+        }
+
+        // {}
+//        xtra_parser_normalize_condition_curly(
+//                script, &position
+//        );
+    } else if (type == XTRA_TOKEN_DO) {
+        // do {} while ()
+
+        // {}
+//        xtra_parser_normalize_condition_curly(
+//                script, &position
+//        );
+
+        if (script->child[++(*position)]->type != XTRA_TOKEN_WHILE) {
+            // error: invalid expression
+        }
+
+        if (script->child[++(*position)]->type != XTRA_TOKEN_BRACKET_ROUND) {
+            // error: invalid expression
+        }
+    } else if (type == XTRA_TOKEN_WHILE) {
+        // while () {}
+        if (script->child[++(*position)]->type != XTRA_TOKEN_BRACKET_ROUND) {
+            // error: invalid expression
+        }
+
+        // {}
+//        xtra_parser_normalize_condition_curly(
+//                script, &position
+//        );
     } else {
         long start = *position;
         xtra_token_p _script = xtra_token_constuct(XTRA_TOKEN_BRACKET_CURLY);
@@ -270,7 +404,8 @@ xtra_parser_normalize_condition_curly(xtra_token_p script, long * position)
         }
 
         if (script->child[*position]->type != XTRA_TOKEN_SEMICOLON) {
-            // error end of file execution
+            // error condition
+            xtra_error("Missed \";\" condition in \"{[code]}\".", 0);
         }
 
         long length = *position - start;

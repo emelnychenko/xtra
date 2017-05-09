@@ -31,3 +31,11 @@
 # Debug files
 *.dSYM/
 *.su
+
+.idea
+CMakeCache.txt
+CMakeFiles
+cmake_install.cmake
+Makefile
+xtra
+xtra.cbp

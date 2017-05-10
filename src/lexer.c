@@ -12,7 +12,7 @@
  * @return
  */
 xtra_token_p
-xtra_lexer_eval(char * text, long length, char * filepath)
+xtra_lexer_eval(char * text, long length, char * file)
 {
     long position = -1;
     char ch;
@@ -21,10 +21,10 @@ xtra_lexer_eval(char * text, long length, char * filepath)
     enum xtra_token_type token_type;
 
     xtra_token_p script = xtra_token_constuct(XTRA_TOKEN_SCRIPT);
-    script->lexer = NULL;
-    script->line = 0;
-    script->column = 0;
-    script->file = filepath;
+    script->lexer       = NULL;
+
+    // constant
+    script->__file      = file;
 
     while (position <= length) {
         int include = 1;
@@ -566,9 +566,11 @@ xtra_lexer_eval(char * text, long length, char * filepath)
         if (include == 1) {
             xtra_token_p token = xtra_token_constuct(token_type);
             token->lexer = op;
-            token->line = line;
-            token->column = column;
-            token->file = filepath;
+
+            // constant
+            token->__line   = line;
+            token->__column = column;
+            token->__file   = file;
 
             script->child = realloc(script->child, (sizeof (xtra_token_p *) * ++script->size));
             script->child[script->size - 1] = token;
@@ -736,7 +738,7 @@ xtra_lexer_string(char * text, long position, long * length, char delimiter)
 
     // fixme: backslashes
 
-    (*length)++; // compensation of delimiters
+    ++(*length); // compensation of delimiters
 
     return op;
 }

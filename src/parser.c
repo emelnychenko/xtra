@@ -35,14 +35,14 @@ xtra_parser_circle(xtra_token_p script)
 {
     long position = -1;
 
-    printf("> script %d\n", script->size);
+    // printf("> script %d\n", script->size);
 
     while (++position < script->size)  {
         xtra_token_p token = script->child[position];
 
         if (xtra_brackets_is_curly(token) == 1) {
             /**
-             *  Go into {} condition "else if" to "elseif"
+             *  Go into {}
              *
              *  @recursion
              */

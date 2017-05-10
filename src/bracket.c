@@ -7,28 +7,43 @@
 void
 xtra_brackets_join_conditions(xtra_token_p script, long * position)
 {
-    long this = *position, length;
+    long start = *position, length;
 
-    xtra_token_p token = script->child[*position];
     xtra_token_p curly = xtra_token_constuct(XTRA_TOKEN_BRACKET_CURLY);
 
     while (++(*position) < script->size) {
-        if (xtra_bracket_is_left(script->child[*position]) == 1) {
+        if (
+            /**
+             *
+             */
+            xtra_bracket_is_left(script->child[*position])
+        ) {
             xtra_brackets_join_conditions(script, position);
-        } else if (xtra_brackets_is_related(token, script->child[*position]) == 1) {
-            xtra_token_free_child(script, this);
+        } else if (
+            /**
+             *
+             */
+            xtra_brackets_is_related(script->child[start], script->child[*position])
+        ) {
+            /**
+             *
+             */
+            xtra_token_free_child(script, start);
             xtra_token_free_child(script, *position);
 
-            length = *position - this;
+            length = *position - start;
 
             xtra_token_replace_range_by_one(
-                    script, this, length, curly
+                    script, start, length, curly
             );
 
             *position -= (length + 1);
 
             return;
         } else {
+            /**
+             *
+             */
             xtra_token_add_child(curly, script->child[*position]);
         }
     }

@@ -154,12 +154,18 @@ enum xtra_token_type {
 struct xtra_token_s {
     enum xtra_token_type type;
     char * lexer;
-    long line;
-    long column;
     long size;
-    char * file;
-    char * namespace;
     xtra_token_p * child;
+
+    // contants
+    long   __line;
+    long   __column;
+    char * __file;
+    char * __dir;
+    char * __function;
+    char * __namespace;
+    char * __class;
+    char * __method;
 };
 
 xtra_token_p

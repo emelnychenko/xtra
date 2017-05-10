@@ -10,12 +10,19 @@ xtra_token_constuct(enum xtra_token_type type)
     xtra_token_p token = (xtra_token_p) malloc(sizeof(xtra_token_t));
     token->type         = type;
     token->size         = 0;
-    token->line         = 0;
-    token->column       = 0;
-    token->lexer        = NULL;
-    token->file         = NULL;
-    token->namespace    = NULL;
+    token->lexer      = NULL;
     token->child  = malloc(sizeof(xtra_token_p *));
+
+    // internal constants
+    token->__line       = 0;
+    token->__column     = 0;
+    token->__file       = NULL;
+    token->__dir        = NULL;
+    token->__function   = NULL;
+    token->__class      = NULL;
+    token->__method     = NULL;
+    token->__namespace  = NULL;
+
     return token;
 }
 
@@ -46,7 +53,7 @@ xtra_token_get_child(xtra_token_p script, long position)
 void
 xtra_token_free_child(xtra_token_p script, long position)
 {
-    return xtra_token_forget(script->child[position]);
+    return xtra_token_free(script->child[position]);
 }
 
 void
@@ -81,7 +88,7 @@ xtra_token_replace_range_by_one(xtra_token_p script, long start, long length, xt
 }
 
 void
-xtra_token_forget(xtra_token_p token)
+xtra_token_free(xtra_token_p token)
 {
     if (token->size < 0) {
         // token already cleaned

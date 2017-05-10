@@ -7,5 +7,5 @@
 void
 xtra_error(const char * message, long code)
 {
-    perror(message); exit(code);
+    perror(message); exit(EXIT_FAILURE);
 }

@@ -12,7 +12,7 @@
 #include "token.h"
 
 xtra_token_p
-xtra_lexer_eval(char *, long);
+xtra_lexer_eval(char *, long, char *);
 
 char *
 xtra_lexer_keyop(char *, long, long *);

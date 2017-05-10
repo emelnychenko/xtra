@@ -7,14 +7,12 @@
 
 #include <stdio.h>
 #include <stdlib.h>
+
 #include "error.h"
 #include "token.h"
-#include "parser/logical.h"
-#include "parser/normalize.h"
+#include "bracket.h"
 #include "if.h"
-#include "for.h"
 #include "do.h"
-#include "while.h"
 
 struct xtra_parser_brackets_s
 {

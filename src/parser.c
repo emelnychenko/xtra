@@ -38,25 +38,45 @@ xtra_parser_circle(xtra_token_p script)
     printf("> script %d\n", script->size);
 
     while (++position < script->size)  {
-        if (script->child[position]->type == XTRA_TOKEN_BRACKET_CURLY) {
-            // go deeper
-            xtra_parser_circle(script->child[position]);
+        xtra_token_p token = script->child[position];
+
+        if (xtra_brackets_is_curly(token) == 1) {
+            /**
+             *  Go into {} condition "else if" to "elseif"
+             *
+             *  @recursion
+             */
+            xtra_parser_circle(token);
+        } else if (xtra_if_join_elseif(script, &position) == 1) {
+            /**
+             *  Convertation "else if" to "elseif"
+             *
+             *  @silence
+             */
+        } else if (xtra_bracket_is_left(token) == 1) {
+            /**
+             *  Convertation "{" and "}" to "{}"
+             *
+             *  @silence
+             */
+            xtra_brackets_join_conditions(script, &position);
+            // open-close
         }
 
-        if (script->child[position]->type == XTRA_TOKEN_FOR) {
-            // for confidition
-            xtra_parser_for_condition(script, &position);
-        } else if (script->child[position]->type == XTRA_TOKEN_DO) {
-            // for confidition
-            xtra_parser_do_condition(script, &position);
-        } else if (script->child[position]->type == XTRA_TOKEN_WHILE) {
-            // for confidition
-            xtra_parser_while_condition(script, &position);
-        } else if (script->child[position]->type == XTRA_TOKEN_IF) {
-            // if confidition
-            printf("> if \n");
-            xtra_parser_if_condition(script, &position);
-        }
+//        if (script->child[position]->type == XTRA_TOKEN_FOR) {
+//            // for confidition
+//            xtra_parser_for_condition(script, &position);
+//        } else if (script->child[position]->type == XTRA_TOKEN_DO) {
+//            // for confidition
+//            xtra_parser_do_condition(script, &position);
+//        } else if (script->child[position]->type == XTRA_TOKEN_WHILE) {
+//            // for confidition
+//            xtra_parser_while_condition(script, &position);
+//        } else if (script->child[position]->type == XTRA_TOKEN_IF) {
+//            // if confidition
+//            printf("> if \n");
+//            xtra_parser_if_condition(script, &position);
+//        }
     }
 }
 
@@ -104,7 +124,7 @@ xtra_parser_check(xtra_token_p script)
 //    }
 
     // condition logical condition
-    xtra_parser_normalize_condition(script);
+    //xtra_parser_normalize_condition(script);
 
     // condition logical condition
     xtra_parser_circle(script);

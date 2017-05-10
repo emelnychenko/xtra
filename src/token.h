@@ -5,11 +5,12 @@
 #ifndef EXTRA_TOKEN_H
 #define EXTRA_TOKEN_H
 
+#include <stdlib.h>
+#include <string.h>
+#include <stdio.h>
+
 typedef struct xtra_token_s xtra_token_t;
 typedef xtra_token_t * xtra_token_p;
-
-#include "lexer.h"
-#include "var.h"
 
 enum xtra_token_type {
     XTRA_TOKEN_SCRIPT,              // any which do not matchess
@@ -148,20 +149,39 @@ enum xtra_token_type {
     XTRA_TOKEN_AWAIT,               // await
 };
 
+#define xtra_token_type_name(x) #x
+
 struct xtra_token_s {
     enum xtra_token_type type;
     char * lexer;
     long line;
     long column;
     long size;
+    char * file;
+    char * namespace;
     xtra_token_p * child;
 };
 
 xtra_token_p
 xtra_token_constuct(enum xtra_token_type);
 
+enum xtra_token_type
+xtra_token_get_type_on_position(xtra_token_p, long);
+
+int
+xtra_token_is_type_on_position(xtra_token_p, long, enum xtra_token_type);
+
+int
+xtra_token_child_exists(xtra_token_p, long);
+
+void
+xtra_token_free_child(xtra_token_p, long);
+
 void
 xtra_token_add_child(xtra_token_p, xtra_token_p);
+
+xtra_token_p
+xtra_token_get_child(xtra_token_p, long);
 
 void
 xtra_token_replace_range_by_one(xtra_token_p script, long start, long length, xtra_token_p token);
@@ -174,5 +194,8 @@ xtra_token_forget_deep(xtra_token_p);
 
 enum xtra_token_type
 xtra_token_define_type(char *);
+
+void
+xtra_token_debug(xtra_token_p, int);
 
 #endif //EXTRA_TOKEN_H

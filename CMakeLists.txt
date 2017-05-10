@@ -1,10 +1,7 @@
-cmake_minimum_required(VERSION 3.6)
+cmake_minimum_required(VERSION 3.0)
 project(xtra)
 
 set(CMAKE_C_STANDARD 99)
-
-set(CMAKE_C_FLAGS_DEBUG "-D_DEBUG")
-set(CMAKE_C_FLAGS_DEBUG "${CMAKE_C_FLAGS_DEBUG} -D_DEBUG")
 
 set(SOURCE_FILES
     main.c
@@ -39,6 +36,6 @@ set(SOURCE_FILES
         src/while.h
         src/do.c
         src/do.h
-        src/error.c src/error.h src/if.c src/if.h)
+        src/error.c src/error.h src/if.c src/if.h src/bracket.c src/bracket.h)
 
 add_executable(xtra ${SOURCE_FILES})

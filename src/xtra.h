@@ -16,8 +16,14 @@
 #include "double.h"
 #include "math.h"
 
+#include "error.h"
+#include "token.h"
+#include "bracket.h"
 #include "interpreter.h"
 #include "lexer.h"
 #include "parser.h"
+
+//#include "if.h"
+//#include "for.h"
 
 #endif //XTRA_H

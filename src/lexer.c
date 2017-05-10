@@ -12,20 +12,30 @@
  * @return
  */
 xtra_token_p
-xtra_lexer_eval(char * text, long length)
+xtra_lexer_eval(char * text, long length, char * filepath)
 {
     long position = -1;
     char ch;
     char * op;
-    long _length = 0;
+    long _length = 0, line = 1, offset = 0, column;
     enum xtra_token_type token_type;
 
     xtra_token_p script = xtra_token_constuct(XTRA_TOKEN_SCRIPT);
-    script->lexer = text;
+    script->lexer = NULL;
+    script->line = 0;
+    script->column = 0;
+    script->file = filepath;
 
     while (position <= length) {
         int include = 1;
         ch = text[++position];
+
+        if (ch == '\n') {
+            offset += ((position + 1) - offset);
+            ++line;
+        }
+
+        column = (position + 1) - offset;
 
         if (ch == '/' && position < length && text[position + 1] == '/') {
             xtra_lexer_comment_inline(text, &position); // inline comment
@@ -35,7 +45,7 @@ xtra_lexer_eval(char * text, long length)
             include = 0;
         } else if ( // preprocessor implementation
                 ch == '\0'
-                || ch == '\n'
+                //|| ch == '\n'
                 || ch == ';'
                 || ch == '('
                 || ch == ')'
@@ -554,10 +564,14 @@ xtra_lexer_eval(char * text, long length)
         }
 
         if (include == 1) {
-            script->size++;
-            script->child = realloc(script->child, (sizeof (xtra_token_p *) * script->size));
-            script->child[script->size - 1] = xtra_token_constuct(token_type);
-            script->child[script->size - 1]->lexer = op;
+            xtra_token_p token = xtra_token_constuct(token_type);
+            token->lexer = op;
+            token->line = line;
+            token->column = column;
+            token->file = filepath;
+
+            script->child = realloc(script->child, (sizeof (xtra_token_p *) * ++script->size));
+            script->child[script->size - 1] = token;
         }
     }
 

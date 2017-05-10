@@ -7,6 +7,9 @@
 
 #include "xtra.h"
 
+int
+xtra_if_join_elseif(xtra_token_p, long *);
+
 void
 xtra_parser_if_condition(xtra_token_p, long *);
 

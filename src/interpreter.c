@@ -11,11 +11,15 @@ xtra_interpreter_eval(char * path)
     long length = strlen(text);
 
     xtra_token_p script = xtra_lexer_eval(
-            text, length
+            text, length, path
     );
+
+    free(text);
 
     // check script syntax
     xtra_parser_check(script);
+
+//    xtra_token_debug(script, 0);
 
     return 1;
 }

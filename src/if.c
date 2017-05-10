@@ -4,6 +4,31 @@
 
 #include "if.h"
 
+int
+xtra_if_join_elseif(xtra_token_p script, long * position)
+{
+    long this = *position, next = *position + 1;
+
+    if (
+           xtra_token_child_exists(script, next)
+        && xtra_token_is_type_on_position(script, this, XTRA_TOKEN_ELSE)
+        && xtra_token_is_type_on_position(script, next, XTRA_TOKEN_IF)
+    ) {
+        xtra_token_free_child(script, this);
+        xtra_token_free_child(script, next);
+
+        --(*position);
+
+        xtra_token_replace_range_by_one(
+            script, this, 1, xtra_token_constuct(XTRA_TOKEN_ELSEIF)
+        );
+
+        return 1;
+    }
+
+    return 0;
+}
+
 void
 xtra_parser_if_condition(xtra_token_p script, long * position)
 {
@@ -86,7 +111,7 @@ xtra_parser_elseif_condition(xtra_token_p script, long * position)
 
     if (script->child[*position + 1]->type == XTRA_TOKEN_ELSEIF) { // condition
         // recursion
-        xtra_parser_logical_condition_elseif(
+        xtra_parser_elseif_condition(
                 script, position
         );
     }

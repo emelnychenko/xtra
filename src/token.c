@@ -8,10 +8,45 @@ xtra_token_p
 xtra_token_constuct(enum xtra_token_type type)
 {
     xtra_token_p token = (xtra_token_p) malloc(sizeof(xtra_token_t));
-    token->type = type;
-    token->size = 0;
-    token->child = malloc(sizeof(xtra_token_p *));
+    token->type         = type;
+    token->size         = 0;
+    token->line         = 0;
+    token->column       = 0;
+    token->lexer        = NULL;
+    token->file         = NULL;
+    token->namespace    = NULL;
+    token->child  = malloc(sizeof(xtra_token_p *));
     return token;
+}
+
+enum xtra_token_type
+xtra_token_get_type_on_position(xtra_token_p script, long position)
+{
+    return script->child[position]->type;
+}
+
+int
+xtra_token_is_type_on_position(xtra_token_p script, long position, enum xtra_token_type type)
+{
+    return script->child[position]->type == type;
+}
+
+int
+xtra_token_child_exists(xtra_token_p script, long position)
+{
+    return position > 0 && position < script->size;
+}
+
+xtra_token_p
+xtra_token_get_child(xtra_token_p script, long position)
+{
+    return script->child[position];
+}
+
+void
+xtra_token_free_child(xtra_token_p script, long position)
+{
+    return xtra_token_forget(script->child[position]);
 }
 
 void
@@ -54,13 +89,35 @@ xtra_token_forget(xtra_token_p token)
     }
 
     if (token->lexer != NULL) {
+        token->lexer = NULL;
 //        printf("%s\n", token->lexer);
-//        free(token->lexer);
+        //free(token->lexer);
     }
 
     token->size = -1;
     free(token->child);
     free(token);
+}
+
+void
+xtra_token_debug(xtra_token_p script, int padding)
+{
+    printf("%ds{\n", padding);
+
+    padding += 2;
+
+    long position = -1;
+    while (--position < script->size) {
+        xtra_token_p token = script->child[position];
+        printf("%d", script->child[position]->type);
+
+        if (script->child[position]->size > 0) {
+            xtra_token_debug(script->child[position], padding);
+        }
+    }
+
+    padding -= 2;
+    printf("%ds}\n", padding);
 }
 
 void

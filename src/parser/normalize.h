@@ -5,7 +5,7 @@
 #ifndef EXTRA_NORMALIZE_H
 #define EXTRA_NORMALIZE_H
 
-#include "../token.h"
+#include "../xtra.h"
 #include "../error.h"
 
 void

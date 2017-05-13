@@ -8,6 +8,6 @@
 #include "xtra.h"
 
 void
-xtra_parser_do_condition(xtra_token_p, long *);
+xtra_do_condition_replace(xtra_token_p, long *);
 
 #endif //EXTRA_DO_H

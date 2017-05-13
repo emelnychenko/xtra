@@ -156,6 +156,10 @@ struct xtra_token_s {
     char * lexer;
     long size;
     xtra_token_p * child;
+    xtra_token_p   parent;
+
+    // performance
+    long memory;
 
     // contants
     long   __line;
@@ -168,8 +172,20 @@ struct xtra_token_s {
     char * __method;
 };
 
+/**
+ *  Global
+ */
 xtra_token_p
 xtra_token_constuct(enum xtra_token_type);
+
+void
+xtra_token_free(xtra_token_p);
+
+enum xtra_token_type
+xtra_token_define_type(char *);
+
+void
+xtra_token_debug(xtra_token_p, int);
 
 enum xtra_token_type
 xtra_token_get_type_on_position(xtra_token_p, long);
@@ -177,11 +193,21 @@ xtra_token_get_type_on_position(xtra_token_p, long);
 int
 xtra_token_is_type_on_position(xtra_token_p, long, enum xtra_token_type);
 
+/**
+ *  Parent section
+ */
+void
+xtra_token_set_parent(xtra_token_p script, xtra_token_p token);
+
 int
-xtra_token_child_exists(xtra_token_p, long);
+xtra_token_parent_exists(xtra_token_p script);
+
+/**
+ *  Child section
+ */
 
 void
-xtra_token_free_child(xtra_token_p, long);
+xtra_token_child_alloc(xtra_token_p);
 
 void
 xtra_token_add_child(xtra_token_p, xtra_token_p);
@@ -189,19 +215,16 @@ xtra_token_add_child(xtra_token_p, xtra_token_p);
 xtra_token_p
 xtra_token_get_child(xtra_token_p, long);
 
+xtra_token_p
+xtra_token_del_child(xtra_token_p, long);
+
+int
+xtra_token_child_exists(xtra_token_p, long);
+
 void
 xtra_token_replace_range_by_one(xtra_token_p script, long start, long length, xtra_token_p token);
 
 void
-xtra_token_forget(xtra_token_p);
-
-void
-xtra_token_forget_deep(xtra_token_p);
-
-enum xtra_token_type
-xtra_token_define_type(char *);
-
-void
-xtra_token_debug(xtra_token_p, int);
+xtra_token_free_child(xtra_token_p, long);
 
 #endif //EXTRA_TOKEN_H

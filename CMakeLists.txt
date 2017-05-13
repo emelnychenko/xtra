@@ -30,12 +30,12 @@ set(SOURCE_FILES
     src/parser/logical.h
     src/parser/normalize.c
     src/parser/normalize.h
-        src/for.c
-        src/for.h
-        src/while.c
-        src/while.h
-        src/do.c
-        src/do.h
-        src/error.c src/error.h src/if.c src/if.h src/bracket.c src/bracket.h)
+    src/for.c
+    src/for.h
+    src/while.c
+    src/while.h
+    src/do.c
+    src/do.h
+    src/error.c src/error.h src/if.c src/if.h src/bracket.c src/bracket.h src/memory.c src/memory.h)
 
 add_executable(xtra ${SOURCE_FILES})

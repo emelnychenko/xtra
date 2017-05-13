@@ -21,10 +21,8 @@ xtra_lexer_eval(char * text, long length, char * file)
     enum xtra_token_type token_type;
 
     xtra_token_p script = xtra_token_constuct(XTRA_TOKEN_SCRIPT);
-    script->lexer       = NULL;
-
-    // constant
     script->__file      = file;
+    // constant
 
     while (position <= length) {
         int include = 1;
@@ -45,7 +43,7 @@ xtra_lexer_eval(char * text, long length, char * file)
             include = 0;
         } else if ( // preprocessor implementation
                 ch == '\0'
-                //|| ch == '\n'
+                || ch == '\n'
                 || ch == ';'
                 || ch == '('
                 || ch == ')'
@@ -572,8 +570,8 @@ xtra_lexer_eval(char * text, long length, char * file)
             token->__column = column;
             token->__file   = file;
 
-            script->child = realloc(script->child, (sizeof (xtra_token_p *) * ++script->size));
-            script->child[script->size - 1] = token;
+            xtra_token_set_parent(token, script);
+            xtra_token_add_child(script, token);
         }
     }
 

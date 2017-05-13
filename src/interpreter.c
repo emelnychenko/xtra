@@ -8,16 +8,22 @@ int
 xtra_interpreter_eval(char * path)
 {
     char * text = xtra_interpreter_read(path);
-    long length = strlen(text);
+    long length = (long) strlen(text);
 
+    //
     xtra_token_p script = xtra_lexer_eval(
-            text, length, path
+        text, length, path
     );
 
-    free(text);
+    //free(text);
+
 
     // check script syntax
     xtra_parser_check(script);
+
+    long memory = (long) xtra_memory_sizeof_token(script);
+
+    printf("script memory: %lu\n", memory);
 
 //    xtra_token_debug(script, 0);
 

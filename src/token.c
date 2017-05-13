@@ -10,8 +10,12 @@ xtra_token_constuct(enum xtra_token_type type)
     xtra_token_p token = (xtra_token_p) malloc(sizeof(xtra_token_t));
     token->type         = type;
     token->size         = 0;
-    token->lexer      = NULL;
-    token->child  = malloc(sizeof(xtra_token_p *));
+    token->lexer        = NULL;
+    token->child        = NULL;
+    token->parent       = NULL;
+
+    // memory profiler
+    token->memory       = 0;
 
     // internal constants
     token->__line       = 0;
@@ -38,6 +42,18 @@ xtra_token_is_type_on_position(xtra_token_p script, long position, enum xtra_tok
     return script->child[position]->type == type;
 }
 
+void
+xtra_token_set_parent(xtra_token_p script, xtra_token_p token)
+{
+    script->parent = token;
+}
+
+int
+xtra_token_parent_exists(xtra_token_p script)
+{
+    return script->parent != NULL;
+}
+
 int
 xtra_token_child_exists(xtra_token_p script, long position)
 {
@@ -53,15 +69,52 @@ xtra_token_get_child(xtra_token_p script, long position)
 void
 xtra_token_free_child(xtra_token_p script, long position)
 {
-    return xtra_token_free(script->child[position]);
+    long memory = sizeof(script->child[position]);
+    xtra_token_free(script->child[position]);
+
+    while (script != NULL) {
+        script->memory -= memory;
+        script = script->parent;
+    }
+}
+
+void
+xtra_token_child_alloc(xtra_token_p script)
+{
+    if (script->child == NULL) {
+        script->child = (xtra_token_p *) malloc(sizeof(xtra_token_p));
+    } else {
+        script->child = (xtra_token_p *) realloc(script->child, (sizeof(xtra_token_p) * script->size));
+    }
 }
 
 void
 xtra_token_add_child(xtra_token_p script, xtra_token_p token)
 {
     script->size++;
-    script->child = realloc(script->child, (sizeof (xtra_token_p *) * script->size));
+    xtra_token_child_alloc(script);
     script->child[script->size - 1] = token;
+
+    long memory = sizeof(token);
+
+    while (script != NULL) {
+        script->memory -= memory;
+        script = script->parent;
+    }
+}
+
+xtra_token_p
+xtra_token_del_child(xtra_token_p script, long start)
+{
+    xtra_token_p token = script->child[start];
+
+    while (++start < script->size) {
+        script->child[start - 1] = script->child[start];
+    }
+
+    --script->size;
+
+    return token;
 }
 
 void
@@ -69,7 +122,7 @@ xtra_token_replace_range_by_one(xtra_token_p script, long start, long length, xt
 {
     script->child[start] = token;
 
-    if (length == 0)
+    if (length <= 0)
         return;
 
     long end = start + length;
@@ -82,28 +135,32 @@ xtra_token_replace_range_by_one(xtra_token_p script, long start, long length, xt
 
     // realloc
     script->size -= length;
-    script->child = realloc(
-            script->child, (sizeof (xtra_token_p *) * script->size)
-    );
+    xtra_token_child_alloc(script);
 }
 
 void
 xtra_token_free(xtra_token_p token)
 {
-    if (token->size < 0) {
+    if (token == NULL || token->size < 0) {
         // token already cleaned
         return;
     }
 
     if (token->lexer != NULL) {
-        token->lexer = NULL;
-//        printf("%s\n", token->lexer);
         //free(token->lexer);
+        token->lexer = NULL;
+
     }
 
     token->size = -1;
-    free(token->child);
+
+    if (token->child != NULL) {
+        free(token->child);
+        token->child = NULL;
+    }
+
     free(token);
+    token = NULL;
 }
 
 void
@@ -125,12 +182,6 @@ xtra_token_debug(xtra_token_p script, int padding)
 
     padding -= 2;
     printf("%ds}\n", padding);
-}
-
-void
-xtra_token_forget_deep(xtra_token_p token)
-{
-
 }
 
 enum xtra_token_type

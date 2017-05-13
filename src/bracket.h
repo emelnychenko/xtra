@@ -23,6 +23,9 @@ int
 xtra_brackets_is_related(xtra_token_p, xtra_token_p);
 
 enum xtra_token_type
+xtra_bracket_get_brackets(xtra_token_p);
+
+enum xtra_token_type
 xtra_bracket_get_related(xtra_token_p);
 
 int

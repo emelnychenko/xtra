@@ -28,6 +28,24 @@ xtra_parser_brackets_exchage(xtra_parser_brackets_p brackets, xtra_token_p token
     } else if (type == XTRA_TOKEN_UNALLOWED) {
         brackets->unallowed++;
     }
+
+    if (brackets->square < 0) {
+        char * error = (char *) malloc(sizeof(char));
+        sprintf(error, "Redundant bracket \"]\" in %s on %lu line %lu column", token->__file, token->__line, token->__column);
+        xtra_error(error, 1);
+    } else if (brackets->round < 0) {
+        char * error = (char *) malloc(sizeof(char));
+        sprintf(error, "Redundant bracket \")\" in %s on %lu line %lu column", token->__file, token->__line, token->__column);
+        xtra_error(error, 1);
+    } else if (brackets->curly < 0) {
+        char * error = (char *) malloc(sizeof(char));
+        sprintf(error, "Redundant bracket \"}\" in %s on %lu line %lu column", token->__file, token->__line, token->__column);
+        xtra_error(error, 1);
+    } else if (brackets->angle < 0) {
+        char * error = (char *) malloc(sizeof(char));
+        sprintf(error, "Redundant bracket \">\" in %s on %lu line %lu column", token->__file, token->__line, token->__column);
+        xtra_error(error, 1);
+    }
 }
 
 void
@@ -61,6 +79,19 @@ xtra_parser_circle(xtra_token_p script)
              */
             xtra_brackets_join_conditions(script, &position);
             // open-close
+        } else if (token->type == XTRA_TOKEN_FOR) {
+
+        } else if (token->type == XTRA_TOKEN_DO) {
+            /**
+             *  Convertation "do {} while ()" to "while () {}"
+             *
+             *  @silence
+             */
+            xtra_do_condition_replace(script, &position);
+        } else if (token->type == XTRA_TOKEN_WHILE) {
+
+        } else {
+            // other condition
         }
 
 //        if (script->child[position]->type == XTRA_TOKEN_FOR) {
@@ -95,49 +126,25 @@ xtra_parser_check(xtra_token_p script)
 
     if (brackets.square != 0) {
         char * error = (char *) malloc(sizeof(char));
-
-        if (brackets.square > 0) {
-            sprintf(error, "Unexpected end of file. Bracket \"]\" missed in %s", script->__file);
-        } else {
-            error = "Redundant bracket bracket \"]\"";
-        }
-
+        sprintf(error, "Unexpected end of file. Bracket \"]\" missed in %s", script->__file);
         xtra_error(error, 6);
     }
 
     if (brackets.round != 0) {
         char * error = (char *) malloc(sizeof(char));
-
-        if (brackets.round > 0) {
-            sprintf(error, "Unexpected end of file. Bracket \")\" missed in %s", script->__file);
-        } else {
-            error = "Redundant bracket bracket \")\"";
-        }
-
+        sprintf(error, "Unexpected end of file. Bracket \")\" missed in %s", script->__file);
         xtra_error(error, 6);
     }
 
     if (brackets.curly != 0) {
         char * error = (char *) malloc(sizeof(char));
-
-        if (brackets.curly > 0) {
-            sprintf(error, "Unexpected end of file. Bracket \"}\" missed in %s", script->__file);
-        } else {
-            error = "Redundant bracket bracket \"}\".\n";
-        }
-
+        sprintf(error, "Unexpected end of file. Bracket \"}\" missed in %s", script->__file);
         xtra_error(error, 6);
     }
 
     if (brackets.angle != 0) {
         char * error = (char *) malloc(sizeof(char));
-
-        if (brackets.angle > 0) {
-            sprintf(error, "Unexpected end of file. Bracket \">\" missed in %s", script->__file);
-        } else {
-            error = "Redundant bracket bracket \">\"";
-        }
-
+        sprintf(error, "Unexpected end of file. Bracket \">\" missed in %s", script->__file);
         xtra_error(error, 1);
     }
 

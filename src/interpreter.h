@@ -8,6 +8,7 @@
 #include <ctype.h>
 
 #include "token.h"
+#include "memory.h"
 #include "lexer.h"
 #include "string.h"
 #include "parser.h"

@@ -163,27 +163,6 @@ xtra_token_free(xtra_token_p token)
     token = NULL;
 }
 
-void
-xtra_token_debug(xtra_token_p script, int padding)
-{
-    printf("%ds{\n", padding);
-
-    padding += 2;
-
-    long position = -1;
-    while (--position < script->size) {
-        xtra_token_p token = script->child[position];
-        printf("%d", script->child[position]->type);
-
-        if (script->child[position]->size > 0) {
-            xtra_token_debug(script->child[position], padding);
-        }
-    }
-
-    padding -= 2;
-    printf("%ds}\n", padding);
-}
-
 enum xtra_token_type
 xtra_token_define_type(char * expression)
 {

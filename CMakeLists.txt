@@ -26,16 +26,22 @@ set(SOURCE_FILES
     src/token.h
     src/enum.c
     src/enum.h
-    src/parser/logical.c
-    src/parser/logical.h
-    src/parser/normalize.c
-    src/parser/normalize.h
     src/for.c
     src/for.h
     src/while.c
     src/while.h
     src/do.c
     src/do.h
-    src/error.c src/error.h src/if.c src/if.h src/bracket.c src/bracket.h src/memory.c src/memory.h)
+    src/error.c
+    src/error.h
+    src/if.c
+    src/if.h
+    src/bracket.c
+    src/bracket.h
+    src/memory.c
+    src/memory.h
+    src/debug.c
+    src/debug.h
+        src/arry.c src/arry.h)
 
 add_executable(xtra ${SOURCE_FILES})

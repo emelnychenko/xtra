@@ -13,20 +13,22 @@
 //    return profile;
 //}
 
-size_t
-xtra_memory_sizeof_token(xtra_token_p token)
+xtra_memory_profile_p
+xtra_memory_profile()
 {
-    return sizeof(token);
+    xtra_memory_profile_p profile = (xtra_memory_profile_p) malloc(sizeof(xtra_memory_profile_t));
+    profile->usage = 0;
+    return profile;
 }
 
-size_t
-xtra_memory_add(xtra_token_p token, size_t memory)
+void
+xtra_memory_pfl_add(xtra_memory_profile_p pfl, size_t usage)
 {
-    return sizeof(token);
+    pfl->usage += usage;
 }
 
-size_t
-xtra_memory_del(xtra_token_p token, size_t memory)
+void
+xtra_memory_pfl_del(xtra_memory_profile_p pfl, size_t usage)
 {
-    return sizeof(token);
+    pfl->usage -= usage;
 }

@@ -8,15 +8,23 @@
 #include <stdlib.h>
 #include "token.h"
 
-//typedef struct xtra_memory_profile_s xtra_memory_profile_t;
-//typedef        xtra_memory_profile_t xtra_memory_profile_p;
+typedef struct xtra_memory_profile_s  xtra_memory_profile_t;
+typedef        xtra_memory_profile_t * xtra_memory_profile_p;
 
-//struct xtra_memory_profile_s {
-//    size_t usage;
-//};
+struct xtra_memory_profile_s {
+    size_t usage;
+};
 //
-//xtra_memory_profile_p
-//xtra_memory_profile_construct();
+
+xtra_memory_profile_p
+xtra_memory_profile();
+
+void
+xtra_memory_add(xtra_memory_profile_p, size_t);
+
+void
+xtra_memory_del(xtra_memory_profile_p, size_t);
+
 
 size_t
 xtra_memory_sizeof_token(xtra_token_p);

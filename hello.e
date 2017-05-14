@@ -1,4 +1,3 @@
-
 if (true) {
     if (true) {
         return false;
@@ -11,5 +10,3 @@ if (true) {
 
 do {
 } while
-
-

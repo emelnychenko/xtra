@@ -8,6 +8,7 @@
 #include <stdlib.h>
 #include <string.h>
 #include <stdio.h>
+#include "arry.h"
 
 typedef struct xtra_token_s xtra_token_t;
 typedef xtra_token_t * xtra_token_p;
@@ -155,7 +156,7 @@ struct xtra_token_s {
     enum xtra_token_type type;
     char * lexer;
     long size;
-    xtra_token_p * child;
+    xtra_arry_p child;
     xtra_token_p   parent;
 
     // performance

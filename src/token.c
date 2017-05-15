@@ -33,13 +33,13 @@ xtra_token_constuct(enum xtra_token_type type)
 enum xtra_token_type
 xtra_token_get_type_on_position(xtra_token_p script, long position)
 {
-    return script->child[position]->type;
+    return ((xtra_token_p) xtra_arry_get(script->child, position))->type;
 }
 
 int
 xtra_token_is_type_on_position(xtra_token_p script, long position, enum xtra_token_type type)
 {
-    return script->child[position]->type == type;
+    return ((xtra_token_p) xtra_arry_get(script->child, position))->type == type;
 }
 
 void
@@ -63,79 +63,26 @@ xtra_token_child_exists(xtra_token_p script, long position)
 xtra_token_p
 xtra_token_get_child(xtra_token_p script, long position)
 {
-    return script->child[position];
+    return (xtra_token_p) xtra_arry_get(script->child, position);
 }
 
 void
 xtra_token_free_child(xtra_token_p script, long position)
 {
-    long memory = sizeof(script->child[position]);
-    xtra_token_free(script->child[position]);
-
-    while (script != NULL) {
-        script->memory -= memory;
-        script = script->parent;
-    }
-}
-
-void
-xtra_token_child_alloc(xtra_token_p script)
-{
-    if (script->child == NULL) {
-        script->child = (xtra_token_p *) malloc(sizeof(xtra_token_p));
-    } else {
-        script->child = (xtra_token_p *) realloc(script->child, (sizeof(xtra_token_p) * script->size));
-    }
+    xtra_token_free(
+        (xtra_token_p) xtra_arry_get(script->child, position)
+    );
 }
 
 void
 xtra_token_add_child(xtra_token_p script, xtra_token_p token)
 {
-    script->size++;
-    xtra_token_child_alloc(script);
-    script->child[script->size - 1] = token;
-
-    long memory = sizeof(token);
-
-    while (script != NULL) {
-        script->memory -= memory;
-        script = script->parent;
-    }
-}
-
-xtra_token_p
-xtra_token_del_child(xtra_token_p script, long start)
-{
-    xtra_token_p token = script->child[start];
-
-    while (++start < script->size) {
-        script->child[start - 1] = script->child[start];
+    if (script->child == NULL) {
+        script->child = xtra_arry(sizeof(xtra_token_p));
     }
 
-    --script->size;
-
-    return token;
-}
-
-void
-xtra_token_replace_range_by_one(xtra_token_p script, long start, long length, xtra_token_p token)
-{
-    script->child[start] = token;
-
-    if (length <= 0)
-        return;
-
-    long end = start + length;
-
-    while (++start <= end) {
-        while (++start < script->size) {
-            script->child[start - 1] = script->child[start];
-        }
-    }
-
-    // realloc
-    script->size -= length;
-    xtra_token_child_alloc(script);
+    xtra_arry_push(script->child, token);
+    script->size = script->child->len;
 }
 
 void
@@ -155,7 +102,7 @@ xtra_token_free(xtra_token_p token)
     token->size = -1;
 
     if (token->child != NULL) {
-        free(token->child);
+        xtra_arry_free(token->child);
         token->child = NULL;
     }
 

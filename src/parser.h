@@ -13,6 +13,8 @@
 #include "bracket.h"
 #include "if.h"
 #include "do.h"
+#include "for.h"
+#include "while.h"
 
 struct xtra_parser_brackets_s
 {

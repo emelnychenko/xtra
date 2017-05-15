@@ -120,7 +120,7 @@ xtra_arry_slice(xtra_arry_p arryi, xtra_arry_len_t start, xtra_arry_len_t len)
     xtra_arry_p arryj = xtra_arry(arryi->mem);
     xtra_arry_len_t end = start + len;
 
-    if (end >= arryi->len) return NULL;
+    if (end > arryi->len) return NULL;
 
     for (xtra_arry_len_t pos = start; pos <= end; ++pos) {
         xtra_arry_add(arryj, arryi->val[pos]);
@@ -132,21 +132,17 @@ xtra_arry_slice(xtra_arry_p arryi, xtra_arry_len_t start, xtra_arry_len_t len)
 xtra_arry_p
 xtra_arry_splice(xtra_arry_p arryi, xtra_arry_len_t start, xtra_arry_len_t len)
 {
-    if (len <= 0) return NULL;
+    xtra_arry_p arryj = xtra_arry_slice(arryi, start, len);
 
-    xtra_arry_p arryj = xtra_arry(arryi->mem);
-    xtra_arry_len_t end = start + len;
-
-    if (end >= arryi->len) return NULL;
-
-    for (xtra_arry_len_t pos = start; pos <= end; ++pos) {
-        xtra_arry_add(arryj, arryi->val[pos]);
-        for (xtra_arry_len_t _pos = pos + 1; _pos < arryi->len; ++_pos) {
-            arryi->val[_pos - 1] = arryi->val[_pos];
-        }
+    if (arryj == NULL) {
+        return NULL;
     }
 
-    arryi->len -= ++len;
+    for(;(start + len) < arryi->len; ++start) {
+        arryi->val[start] = arryi->val[start + len];
+    }
+
+    arryi->len -= len;
     arryi->val = (void**) realloc(arryi->val, arryi->len * arryi->mem);
     return arryj;
 }
@@ -155,49 +151,78 @@ xtra_arry_p
 xtra_arry_vsplice(xtra_arry_p arryi, xtra_arry_len_t start, xtra_arry_len_t len, xtra_arry_len_t argc, void* argv, ...)
 {
     xtra_arry_p arryj = xtra_arry_splice(arryi, start, len);
-    if (arryj == NULL) return NULL;
-
     if (argc <= 0) return arryj;
 
     arryi->len += argc;
     arryi->val = (void**) realloc(arryi->val, arryi->len * arryi->mem);
 
-    // iterate
-    va_list argv_list;
-    va_start(argv_list, argv);
+    if (len == 0) {
+        start++;
+    }
 
-//    xtra_arry_len_t swp = arryi->len - argc;
+    xtra_arry_len_t position = arryi->len;
+    while (--position >= start) {
+        arryi->val[position] = arryi->val[position - argc];
+    }
 
-//    for (xtra_arry_len_t pos = 0; pos < ; ++pos) {
-//
-//    }
-//
-//    for (xtra_arry_len_t pos = start; pos < (start + argc); ++pos) {
-//        for (xtra_arry_len_t _pos = pos + 1; _pos < arryi->len; ++_pos) {
-//            arryi->val[_pos - 1] = arryi->val[_pos];
-//        }
-//        xtra_arry_p _pos
-//        while
-//    }
+    arryi->val[start] = argv;
+    if (argc == 1) {
+        return arryj;
+    }
 
-//            arryi->val[pos] = (void*) va_arg(list, void*);
-
-    va_end(argv_list);
+    va_list valist;
+    va_start(valist, argv);
+    while (--argc != 0) {
+        arryi->val[++start] = (void *) va_arg(valist, void*);
+    }
+    va_end(valist);
     return arryj;
 }
 
 xtra_arry_p
-xtra_arry_csplice(xtra_arry_p arryi, xtra_arry_len_t start, xtra_arry_len_t len, xtra_arry_p arryj) {
+xtra_arry_asplice(xtra_arry_p arryi, xtra_arry_len_t start, xtra_arry_len_t len, xtra_arry_p arryj)
+{
     xtra_arry_p arryk = xtra_arry_splice(arryi, start, len);
-    if (arryk == NULL) return NULL;
-
-    if (arryj->len <= 0) return arryk;
+    if (arryj->len <= 0) return arryj;
 
     arryi->len += arryj->len;
     arryi->val = (void**) realloc(arryi->val, arryi->len * arryi->mem);
 
-    // iterate
-    // there
+    if (len == 0) {
+        start++;
+    }
 
+    xtra_arry_len_t position = arryi->len;
+    while (--position >= start) {
+        arryi->val[position] = arryi->val[position - arryj->len];
+    }
+
+    for (position = 0, start--; position < arryj->len; ++position) {
+        arryi->val[++start] = arryj->val[position];
+    }
     return arryk;
+}
+
+void
+xtra_arry_reverse(xtra_arry_p arryi)
+{
+    double diviner = arryi->len / 2;
+    xtra_arry_len_t position = -1;
+
+    while((double) ++position <= diviner) {
+        void * item = arryi->val[arryi->len - 1 - position];
+        arryi->val[arryi->len - 1 - position] = arryi->val[position];
+        arryi->val[position] = item;
+    }
+}
+
+void
+xtra_arry_free(xtra_arry_p arry)
+{
+    if (arry == NULL) {
+        return;
+    }
+
+    arry->len = -1;
+    free(arry->val);
 }

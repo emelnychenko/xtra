@@ -56,7 +56,7 @@ xtra_parser_circle(xtra_token_p script)
     // printf("> script %d\n", script->size);
 
     while (++position < script->size)  {
-        xtra_token_p token = script->child[position];
+        xtra_token_p token = (xtra_token_p) xtra_arry_get(script->child, position);
 
         if (xtra_brackets_is_curly(token) == 1) {
             /**
@@ -79,8 +79,10 @@ xtra_parser_circle(xtra_token_p script)
              */
             xtra_brackets_join_conditions(script, &position);
             // open-close
+        } else if (token->type == XTRA_TOKEN_IF) {
+            xtra_parser_if_condition(script, &position);
         } else if (token->type == XTRA_TOKEN_FOR) {
-
+            xtra_parser_for_condition(script, &position);
         } else if (token->type == XTRA_TOKEN_DO) {
             /**
              *  Convertation "do {} while ()" to "while () {}"
@@ -89,7 +91,7 @@ xtra_parser_circle(xtra_token_p script)
              */
             xtra_do_condition_replace(script, &position);
         } else if (token->type == XTRA_TOKEN_WHILE) {
-
+            xtra_parser_while_condition(script, &position);
         } else {
             // other condition
         }
@@ -120,7 +122,7 @@ xtra_parser_check(xtra_token_p script)
     // global rule checker
     long iterator = -1;
     while(++iterator < script->size) {
-        xtra_token_p token = script->child[iterator];
+        xtra_token_p token = (xtra_token_p) xtra_arry_get(script->child, iterator);
         xtra_parser_brackets_exchage(&brackets, token);
     }
 

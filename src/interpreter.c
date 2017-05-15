@@ -15,7 +15,7 @@ xtra_interpreter_eval(char * path)
         text, length, path
     );
 
-    xtra_debug_token(script, 0);
+    //xtra_debug_token(script, 0);
 
     //free(text);
 

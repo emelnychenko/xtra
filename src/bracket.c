@@ -10,7 +10,7 @@ xtra_brackets_join_conditions(xtra_token_p script, long * position)
     long start = *position, length;
 
     xtra_token_p curly = xtra_token_constuct(
-            xtra_bracket_get_brackets(script->child[*position])
+            xtra_bracket_get_brackets((xtra_token_p) xtra_arry_get(script->child, *position))
     );
 
     while (++(*position) < script->size) {
@@ -18,14 +18,14 @@ xtra_brackets_join_conditions(xtra_token_p script, long * position)
             /**
              *
              */
-            xtra_bracket_is_left(script->child[*position])
+            xtra_bracket_is_left((xtra_token_p) xtra_arry_get(script->child, *position))
         ) {
             xtra_brackets_join_conditions(script, position);
         } else if (
             /**
              *
              */
-            xtra_brackets_is_related(script->child[start], script->child[*position])
+            xtra_brackets_is_related((xtra_token_p) xtra_arry_get(script->child, start), (xtra_token_p) xtra_arry_get(script->child, *position))
         ) {
             /**
              *
@@ -37,9 +37,9 @@ xtra_brackets_join_conditions(xtra_token_p script, long * position)
 
             xtra_token_set_parent(curly, script);
 
-            xtra_token_replace_range_by_one(
-                    script, start, length, curly
-            );
+            xtra_arry_p arry = xtra_arry_vsplice(script->child, start, length + 1, 1, curly);
+            xtra_arry_free(arry);
+            script->size = script->child->len;
 
             *position -= (length + 1);
 
@@ -48,7 +48,7 @@ xtra_brackets_join_conditions(xtra_token_p script, long * position)
             /**
              *
              */
-            xtra_token_add_child(curly, script->child[*position]);
+            xtra_token_add_child(curly, (xtra_token_p) xtra_arry_get(script->child, *position));
         }
     }
 }

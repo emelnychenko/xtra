@@ -54,4 +54,14 @@ xtra_arry_splice(xtra_arry_p, xtra_arry_len_t, xtra_arry_len_t);
 xtra_arry_p
 xtra_arry_vsplice(xtra_arry_p, xtra_arry_len_t, xtra_arry_len_t, xtra_arry_len_t, void *, ...);
 
+xtra_arry_p
+xtra_arry_asplice(xtra_arry_p, xtra_arry_len_t, xtra_arry_len_t, xtra_arry_p);
+
+void
+xtra_arry_reverse(xtra_arry_p);
+
+void
+xtra_arry_free(xtra_arry_p);
+
+
 #endif //XTRA_ARRY_H

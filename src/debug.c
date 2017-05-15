@@ -31,7 +31,7 @@ void xtra_debug_token(xtra_token_p token, int spaces) {
 
     long position = -1;
     while (++position < token->size) {
-        xtra_debug_token(token->child[position], spaces);
+        xtra_debug_token((xtra_token_p) xtra_arry_get(token->child, position), spaces);
     }
 
     spaces -= 2;

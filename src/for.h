@@ -5,9 +5,12 @@
 #ifndef EXTRA_FOR_H
 #define EXTRA_FOR_H
 
-#include "xtra.h"
+#include "sign.h"
+#include "parser.h"
+#include "error.h"
+#include "bracket.h"
 
 void
-xtra_parser_for_condition(xtra_token_p, long *);
+xtra_for_parse(xtra_sign_p, long *);
 
 #endif //EXTRA_FOR_H

@@ -6,12 +6,12 @@
 #define XTRA_DEBUG_H
 
 #include <stdio.h>
-#include "token.h"
+#include "sign.h"
 
 void
 xtra_debug_spaces(int, const char *);
 
 void
-xtra_debug_token(xtra_token_p, int);
+xtra_debug_token(xtra_sign_p, int);
 
 #endif //XTRA_DEBUG_H

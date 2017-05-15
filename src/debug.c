@@ -16,23 +16,23 @@ xtra_debug_spaces(int padding, const char * line)
 }
 
 void
-xtra_debug_token(xtra_token_p token, int spaces);
+xtra_debug_token(xtra_sign_p token, int spaces);
 
-void xtra_debug_token(xtra_token_p token, int spaces) {
-    char *message = malloc(sizeof(char));
-    sprintf(message, "# (%lu) %s\n", token->size, token->lexer != NULL ? token->lexer : "NULL");
-    xtra_debug_spaces(spaces, message);
-    if (token->size <= 0) {
-        return;
-    }
+void xtra_debug_token(xtra_sign_p token, int spaces) {
+//    char *message = malloc(sizeof(char));
+//    sprintf(message, "# (%lu) %s\n", token->size, token->lexer != NULL ? token->lexer : "NULL");
+//    xtra_debug_spaces(spaces, message);
+//    if (token->size <= 0) {
+//        return;
+//    }
 
 
     spaces += 2;
 
-    long position = -1;
-    while (++position < token->size) {
-        xtra_debug_token((xtra_token_p) xtra_arry_get(token->child, position), spaces);
-    }
+//    long position = -1;
+//    while (++position < token->size) {
+//        xtra_debug_token((xtra_sign_p) xtra_arry_get(token->child, position), spaces);
+//    }
 
     spaces -= 2;
     xtra_debug_spaces(spaces, "#!\n");
@@ -43,7 +43,7 @@ void xtra_debug_token(xtra_token_p token, int spaces) {
 //
 //    long position = -1;
 //    while (--position < script->size) {
-//        xtra_token_p token = script->child[position];
+//        xtra_sign_p token = script->child[position];
 //        printf("%d", script->child[position]->type);
 //
 //        if (script->child[position]->size > 0) {

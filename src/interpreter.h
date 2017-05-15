@@ -7,7 +7,7 @@
 
 #include <ctype.h>
 
-#include "token.h"
+#include "sign.h"
 #include "debug.h"
 #include "memory.h"
 #include "lexer.h"

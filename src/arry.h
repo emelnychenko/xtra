@@ -28,6 +28,9 @@ xtra_arry_add(xtra_arry_p, void*);
 void *
 xtra_arry_get(xtra_arry_p, xtra_arry_len_t);
 
+int
+xtra_arry_has(xtra_arry_p, xtra_arry_len_t);
+
 xtra_arry_len_t
 xtra_arry_set(xtra_arry_p, xtra_arry_len_t, void*);
 
@@ -53,6 +56,9 @@ xtra_arry_splice(xtra_arry_p, xtra_arry_len_t, xtra_arry_len_t);
 
 xtra_arry_p
 xtra_arry_vsplice(xtra_arry_p, xtra_arry_len_t, xtra_arry_len_t, xtra_arry_len_t, void *, ...);
+
+xtra_arry_p
+xtra_arry_vlsplice(xtra_arry_p, xtra_arry_len_t, xtra_arry_len_t, xtra_arry_len_t, void *, va_list);
 
 xtra_arry_p
 xtra_arry_asplice(xtra_arry_p, xtra_arry_len_t, xtra_arry_len_t, xtra_arry_p);

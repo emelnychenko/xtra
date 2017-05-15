@@ -22,8 +22,6 @@ set(SOURCE_FILES
     src/lexer.h
     src/parser.c
     src/parser.h
-    src/token.c
-    src/token.h
     src/enum.c
     src/enum.h
     src/for.c
@@ -42,6 +40,6 @@ set(SOURCE_FILES
     src/memory.h
     src/debug.c
     src/debug.h
-        src/arry.c src/arry.h)
+        src/arry.c src/arry.h src/io.c src/io.h src/switch.c src/switch.h src/sign.c src/sign.h)
 
 add_executable(xtra ${SOURCE_FILES})

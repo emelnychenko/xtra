@@ -11,17 +11,17 @@
  * @param length
  * @return
  */
-xtra_token_p
+xtra_sign_p
 xtra_lexer_eval(char * text, long length, char * file)
 {
     long position = -1;
     char ch;
     char * op;
     long _length = 0, line = 1, offset = 0, column;
-    enum xtra_token_type token_type;
+    enum xtra_sign_e type;
 
-    xtra_token_p script = xtra_token_constuct(XTRA_TOKEN_SCRIPT);
-    script->__file      = file;
+    xtra_sign_p sign = xtra_sign(XTRA_SIGN_DOC);
+    //script->__file      = file;
     // constant
 
     while (position <= length) {
@@ -61,11 +61,11 @@ xtra_lexer_eval(char * text, long length, char * file)
             op[1] = '\0';
 
             if (ch == '\0') {
-                token_type = XTRA_TOKEN_EOF;
+                type = XTRA_SIGN_EOF;
             } else if (ch == '\n') {
-                token_type = XTRA_TOKEN_EOL;
+                type = XTRA_SIGN_EOL;
             } else {
-                token_type = xtra_token_define_type(op);
+                type = xtra_sign_define(op);
             }
         } else if (
                 ch == '='
@@ -133,7 +133,7 @@ xtra_lexer_eval(char * text, long length, char * file)
             } else if (ch == '$') {
                 ++position;
                 _length = 0;
-                token_type = XTRA_TOKEN_INTERPOLATION;
+                type = XTRA_SIGN_INTERPOLATION;
                 op = xtra_lexer_string(text, position, &_length, text[position]);
 
                 //printf("s %s\n", op);
@@ -504,11 +504,11 @@ xtra_lexer_eval(char * text, long length, char * file)
             }
 
             if (include == 1) {
-                token_type = xtra_token_define_type(op);
+                type = xtra_sign_define(op);
             }
         } else if (ch == '\'' || ch == '"') {
             _length = 0;
-            token_type = XTRA_TOKEN_STRING;
+            type = XTRA_SIGN_STRING;
             op = xtra_lexer_string(text, position, &_length, ch);
 
             //printf("s %s\n", op);
@@ -522,29 +522,29 @@ xtra_lexer_eval(char * text, long length, char * file)
             _length = 0;
             // find op expression to end of line or ;
             op = xtra_lexer_keyop(text, position, &_length);
-            token_type = xtra_token_define_type(op);
+            type = xtra_sign_define(op);
 
-            if (token_type == XTRA_TOKEN_UNDEFINED) {
+            if (type == XTRA_SIGN_UNDEFINED) {
                 if (xtra_lexer_is_int(op, _length) == 1) {
-                    token_type = XTRA_TOKEN_INT;
+                    type = XTRA_SIGN_INT;
                     // int
                     //printf(
                     //    "i %d\n", xtra_lexer_int(op)
                     //);
                 } else if (xtra_lexer_is_double(op, _length) == 1) {
-                    token_type = XTRA_TOKEN_DOUBLE;
+                    type = XTRA_SIGN_DOUBLE;
                     // double
                     //printf(
                      //    "d %f\n", xtra_lexer_double(op)
                     //);
                 } else if (xtra_lexer_is_binary(op, _length) == 1) {
                     // binary prefix
-                    token_type = XTRA_TOKEN_BINARY;
+                    type = XTRA_SIGN_BINARY;
                 } else if (xtra_lexer_validate_undefined(op, _length) == 1) {
                     // need parse next thinks .,+= etc
                     //printf("v %s\n", op);
                 } else {
-                    token_type = XTRA_TOKEN_UNALLOWED;
+                    type = XTRA_SIGN_UNALLOWED;
                     // lexical error. bad value
                 }
             } else {
@@ -562,20 +562,20 @@ xtra_lexer_eval(char * text, long length, char * file)
         }
 
         if (include == 1) {
-            xtra_token_p token = xtra_token_constuct(token_type);
-            token->lexer = op;
+            xtra_sign_p _sign = xtra_sign(type);
+            //token->lexer = op;
 
             // constant
-            token->__line   = line;
-            token->__column = column;
-            token->__file   = file;
+            //token->__line   = line;
+            //token->__column = column;
+            //token->__file   = file;
 
-            xtra_token_set_parent(token, script);
-            xtra_token_add_child(script, token);
+            //xtra_token_set_parent(_sign, script);
+            xtra_sign_arry_push(sign, _sign);
         }
     }
 
-    return script;
+    return sign;
 }
 
 char *
@@ -723,7 +723,7 @@ xtra_lexer_string(char * text, long position, long * length, char delimiter)
         ch = text[++position]; ++_length;
     }
 
-    char * op = ( char *) calloc(_length, sizeof( char));
+    char * op = ( char *) calloc((size_t)_length, sizeof( char));
     position -= _length;
 
     while ((*length) < _length) {
@@ -754,7 +754,7 @@ xtra_lexer_normalize(char * string, long length)
         _length++;
     }
 
-    char * _string = ( char *) calloc(_length, sizeof( char));
+    char * _string = ( char *) calloc((size_t)_length, sizeof( char));
 
     position = -1;
     while (++position < length) {

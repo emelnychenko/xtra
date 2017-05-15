@@ -17,7 +17,7 @@
 #include "math.h"
 
 #include "error.h"
-#include "token.h"
+#include "sign.h"
 #include "bracket.h"
 #include "interpreter.h"
 #include "lexer.h"

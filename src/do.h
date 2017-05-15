@@ -5,9 +5,12 @@
 #ifndef EXTRA_DO_H
 #define EXTRA_DO_H
 
-#include "xtra.h"
+#include "sign.h"
+#include "parser.h"
+#include "error.h"
+#include "bracket.h"
 
 void
-xtra_do_condition_replace(xtra_token_p, long *);
+xtra_do_parse(xtra_sign_p, long *);
 
 #endif //EXTRA_DO_H

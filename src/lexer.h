@@ -9,9 +9,9 @@
 #include <stdlib.h>
 #include <string.h>
 #include <ctype.h>
-#include "token.h"
+#include "sign.h"
 
-xtra_token_p
+xtra_sign_p
 xtra_lexer_eval(char *, long, char *);
 
 char *

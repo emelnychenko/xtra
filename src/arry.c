@@ -27,8 +27,14 @@ xtra_arry_add(xtra_arry_p arry, void* item)
 void *
 xtra_arry_get(xtra_arry_p arry, xtra_arry_len_t position)
 {
-    return position >= arry->len ?
-           NULL : arry->val[position];
+    return xtra_arry_has(arry, position) ?
+           arry->val[position] : NULL;
+}
+
+int
+xtra_arry_has(xtra_arry_p arry, xtra_arry_len_t position)
+{
+    return position >= 0 && position < arry->len;
 }
 
 xtra_arry_len_t
@@ -110,8 +116,6 @@ xtra_arry_concat(xtra_arry_p arryi, xtra_arry_p arryj)
     return arryk;
 }
 
-#include <stdio.h>
-
 xtra_arry_p
 xtra_arry_slice(xtra_arry_p arryi, xtra_arry_len_t start, xtra_arry_len_t len)
 {
@@ -150,6 +154,16 @@ xtra_arry_splice(xtra_arry_p arryi, xtra_arry_len_t start, xtra_arry_len_t len)
 xtra_arry_p
 xtra_arry_vsplice(xtra_arry_p arryi, xtra_arry_len_t start, xtra_arry_len_t len, xtra_arry_len_t argc, void* argv, ...)
 {
+    va_list a_list;
+    va_start(a_list, argv);
+    xtra_arry_p arryk = xtra_arry_vlsplice(arryi, start, len, argc, argv, a_list);
+    va_end(a_list);
+    return arryk;
+}
+
+xtra_arry_p
+xtra_arry_vlsplice(xtra_arry_p arryi, xtra_arry_len_t start, xtra_arry_len_t len, xtra_arry_len_t argc, void* argv, va_list a_list)
+{
     xtra_arry_p arryj = xtra_arry_splice(arryi, start, len);
     if (argc <= 0) return arryj;
 
@@ -170,12 +184,9 @@ xtra_arry_vsplice(xtra_arry_p arryi, xtra_arry_len_t start, xtra_arry_len_t len,
         return arryj;
     }
 
-    va_list valist;
-    va_start(valist, argv);
     while (--argc != 0) {
-        arryi->val[++start] = (void *) va_arg(valist, void*);
+        arryi->val[++start] = (void *) va_arg(a_list, void*);
     }
-    va_end(valist);
     return arryj;
 }
 

@@ -11,7 +11,7 @@ xtra_interpreter_eval(char * path)
     long length = (long) strlen(text);
 
     //
-    xtra_token_p script = xtra_lexer_eval(
+    xtra_sign_p sign = xtra_lexer_eval(
         text, length, path
     );
 
@@ -21,7 +21,7 @@ xtra_interpreter_eval(char * path)
 
 
     // check script syntax
-    xtra_parser_check(script);
+    xtra_parser_check(sign);
 
     //long memory = (long) xtra_memory_sizeof_token(script);
 

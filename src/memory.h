@@ -6,7 +6,7 @@
 #define XTRA_MEMORY_H
 
 #include <stdlib.h>
-#include "token.h"
+//#include "token.h"
 
 typedef struct xtra_memory_profile_s  xtra_memory_profile_t;
 typedef        xtra_memory_profile_t * xtra_memory_profile_p;
@@ -24,8 +24,4 @@ xtra_memory_add(xtra_memory_profile_p, size_t);
 
 void
 xtra_memory_del(xtra_memory_profile_p, size_t);
-
-
-size_t
-xtra_memory_sizeof_token(xtra_token_p);
 #endif //XTRA_MEMORY_H

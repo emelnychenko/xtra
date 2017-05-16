@@ -5,25 +5,25 @@
 #include "var.h"
 
 xtra_var_p
-xtra_var_contruct(enum xtra_var_type type)
-{
+xtra_var(enum xtra_var_e type) {
     xtra_var_p var;
 
     if (type != XTRA_VAR_NULL) {
-        var = malloc(sizeof(xtra_var_p));
+        var = (xtra_var_p) malloc(sizeof(xtra_var_t));
     }
 
-    var->type = type;
+    var->i = 0;
+    var->b = 0;
+    var->d = 0;
+    var->s = NULL;
+    var->t = type;
     return  var;
 }
 
 void
-xtra_var_destruct(xtra_var_p var)
-{
-    if (var->type == XTRA_VAR_NULL)
-        return;
-
-    free(var);
-
-    var->type = XTRA_VAR_NULL;
+xtra_var_free(xtra_var_p var) {
+    if (var->t != XTRA_VAR_NULL) {
+        free(var);
+        var->t = XTRA_VAR_NULL;
+    }
 }

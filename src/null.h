@@ -8,12 +8,6 @@
 #include "var.h"
 
 xtra_var_p
-xtra_var_null_construct();
-
-void
-xtra_var_null_destruct(xtra_var_p);
-
-int
-xtra_var_is_null(xtra_var_p);
+xtra_null();
 
 #endif //EXTRA_NULL_H

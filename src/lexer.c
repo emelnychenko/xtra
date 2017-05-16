@@ -18,6 +18,7 @@ xtra_lexer_eval(char * text, long length, char * file)
     char ch;
     char * op;
     long _length = 0, line = 1, offset = 0, column;
+    xtra_var_p var;
     enum xtra_sign_e type;
 
     xtra_sign_p sign = xtra_sign(XTRA_SIGN_DOC);
@@ -527,6 +528,7 @@ xtra_lexer_eval(char * text, long length, char * file)
             if (type == XTRA_SIGN_UNDEFINED) {
                 if (xtra_lexer_is_int(op, _length) == 1) {
                     type = XTRA_SIGN_INT;
+
                     // int
                     //printf(
                     //    "i %d\n", xtra_lexer_int(op)
@@ -628,7 +630,7 @@ xtra_lexer_keyop(char * text, long position, long * length)
         ch = text[++position]; ++_length;
     }
 
-    char * op = ( char *) calloc(_length, sizeof( char));
+    char * op = ( char *) calloc((size_t) _length, sizeof( char));
     position -= _length;
 
     while ((*length) < _length) {
@@ -727,8 +729,11 @@ xtra_lexer_string(char * text, long position, long * length, char delimiter)
     position -= _length;
 
     while ((*length) < _length) {
-        op[*length] = text[position];
+        if (text[position] == '\\' && text[position + 1] == '\\') {
+            (*length)++; position++;
+        }
 
+        op[*length] = text[position];
         (*length)++; position++;
     }
 

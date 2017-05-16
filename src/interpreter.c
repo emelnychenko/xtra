@@ -15,19 +15,8 @@ xtra_interpreter_eval(char * path)
         text, length, path
     );
 
-    //xtra_debug_token(script, 0);
-
-    //free(text);
-
-
     // check script syntax
     xtra_parser_check(sign);
-
-    //long memory = (long) xtra_memory_sizeof_token(script);
-
-    //printf("script memory: %lu\n", memory);
-
-//    xtra_token_debug(script, 0);
 
     return 1;
 }

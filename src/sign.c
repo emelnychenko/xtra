@@ -9,6 +9,7 @@ xtra_sign(enum xtra_sign_e type) {
     xtra_sign_p sign = (xtra_sign_p) malloc(sizeof(xtra_sign_t));
     sign->type = type;
     sign->arry = NULL;
+    sign->var  = NULL;
     return sign;
 }
 
@@ -23,6 +24,16 @@ xtra_arry_p
 xtra_sign_arry(xtra_sign_p sign) {
     if (sign->arry == NULL) { sign->arry = xtra_arry(sizeof(xtra_sign_p)); }
     return sign->arry;
+}
+
+xtra_var_p
+xtra_sign_var_get(xtra_sign_p sign) {
+    return sign->var == NULL ? NULL : sign->var;
+}
+
+void
+xtra_sign_var_set(xtra_sign_p sign, xtra_var_p var) {
+    sign->var = var;
 }
 
 xtra_sign_l
@@ -250,21 +261,21 @@ xtra_sign_define(char * string) {
     } else if (strcasecmp(string, "break") == 0) {
         type = XTRA_SIGN_BREAK; // minus-assign
     } else if (strcmp(string, "[") == 0) {
-        type = XTRA_SIGN_BRACKET_SQUARE_L; // minus-assign
+        type = XTRA_SIGN_SQUARE_L; // minus-assign
     } else if (strcmp(string, "]") == 0) {
-        type = XTRA_SIGN_BRACKET_SQUARE_R; // minus-assign
+        type = XTRA_SIGN_SQUARE_R; // minus-assign
     } else if (strcmp(string, "(") == 0) {
-        type = XTRA_SIGN_BRACKET_ROUND_L; // minus-assign
+        type = XTRA_SIGN_ROUND_L; // minus-assign
     } else if (strcmp(string, ")") == 0) {
-        type = XTRA_SIGN_BRACKET_ROUND_R; // minus-assign
+        type = XTRA_SIGN_ROUND_R; // minus-assign
     } else if (strcmp(string, "{") == 0) {
-        type = XTRA_SIGN_BRACKET_CURLY_L; // minus-assign
+        type = XTRA_SIGN_CURLY_L; // minus-assign
     } else if (strcmp(string, "}") == 0) {
-        type = XTRA_SIGN_BRACKET_CURLY_R; // minus-assign
+        type = XTRA_SIGN_CURLY_R; // minus-assign
     } else if (strcmp(string, "<") == 0) {
-        type = XTRA_SIGN_BRACKET_ANGLE_L; // minus-assign
+        type = XTRA_SIGN_ANGLE_L; // minus-assign
     } else if (strcmp(string, ">") == 0) {
-        type = XTRA_SIGN_BRACKET_ANGLE_R; // minus-assign
+        type = XTRA_SIGN_ANGLE_R; // minus-assign
     } else if (strcasecmp(string, "null") == 0) {
         type = XTRA_SIGN_NULL;
     } else if (strcasecmp(string, "var") == 0) {

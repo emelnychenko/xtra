@@ -47,7 +47,7 @@ xtra_if_parse(xtra_sign_p sign, long * position)
         xtra_brackets_join_conditions(sign, position);
     }
 
-    if (((xtra_sign_p) xtra_sign_arry_get(sign, ++(*position)))->type != XTRA_SIGN_BRACKET_ROUND) { // condition
+    if (((xtra_sign_p) xtra_sign_arry_get(sign, ++(*position)))->type != XTRA_SIGN_ROUND) { // condition
         // error condition
         xtra_error("Missed \"([code])\" condition in \"if\".", 0);
     }
@@ -57,7 +57,7 @@ xtra_if_parse(xtra_sign_p sign, long * position)
         xtra_brackets_join_conditions(sign, position);
     }
 
-    if (((xtra_sign_p) xtra_sign_arry_get(sign, ++(*position)))->type != XTRA_SIGN_BRACKET_CURLY) { // condition
+    if (((xtra_sign_p) xtra_sign_arry_get(sign, ++(*position)))->type != XTRA_SIGN_CURLY) { // condition
         // error condition
         xtra_error("Missed \"{[code]}\" condition in \"if\".", 0);
     }
@@ -90,7 +90,7 @@ xtra_if_parse(xtra_sign_p sign, long * position)
         xtra_brackets_join_conditions(sign, position);
     }
 
-    if (((xtra_sign_p) xtra_sign_arry_get(sign, ++(*position)))->type != XTRA_SIGN_BRACKET_CURLY) { // condition
+    if (((xtra_sign_p) xtra_sign_arry_get(sign, ++(*position)))->type != XTRA_SIGN_CURLY) { // condition
         // error condition
         xtra_error("Missed \"{[code]}\" condition after \"else\".", 0);
     }
@@ -112,7 +112,7 @@ xtra_elseif_parse(xtra_sign_p sign, long * position)
         xtra_brackets_join_conditions(sign, position);
     }
 
-    if (((xtra_sign_p) xtra_sign_arry_get(sign, ++(*position)))->type != XTRA_SIGN_BRACKET_ROUND) { // condition
+    if (((xtra_sign_p) xtra_sign_arry_get(sign, ++(*position)))->type != XTRA_SIGN_ROUND) { // condition
         // error condition
         xtra_error("Missed \"([code])\" condition after \"elseif\".", 0);
     }
@@ -122,7 +122,7 @@ xtra_elseif_parse(xtra_sign_p sign, long * position)
         xtra_brackets_join_conditions(sign, position);
     }
 
-    if (((xtra_sign_p) xtra_sign_arry_get(sign, ++(*position)))->type != XTRA_SIGN_BRACKET_CURLY) { // condition
+    if (((xtra_sign_p) xtra_sign_arry_get(sign, ++(*position)))->type != XTRA_SIGN_CURLY) { // condition
         // error condition
         xtra_error("Missed \"{[code]}\" condition after \"elseif\".", 0);
     }

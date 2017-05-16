@@ -17,7 +17,7 @@ xtra_while_parse(xtra_sign_p sign, long * position)
         xtra_brackets_join_conditions(sign, position);
     }
 
-    if (xtra_sign_arry_get(sign, ++(*position))->type != XTRA_SIGN_BRACKET_ROUND) {
+    if (xtra_sign_arry_get(sign, ++(*position))->type != XTRA_SIGN_ROUND) {
         // error condition
         xtra_error("Missed \"([code])\" condition in \"while\".", 0);
     }
@@ -27,7 +27,7 @@ xtra_while_parse(xtra_sign_p sign, long * position)
         xtra_brackets_join_conditions(sign, position);
     }
 
-    if (((xtra_sign_p) xtra_sign_arry_get(sign, ++(*position)))->type != XTRA_SIGN_BRACKET_CURLY) {
+    if (((xtra_sign_p) xtra_sign_arry_get(sign, ++(*position)))->type != XTRA_SIGN_CURLY) {
         // error condition
         xtra_error("Missed \"{[code]}\" condition in \"while\".", 0);
     }

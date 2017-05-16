@@ -9,21 +9,21 @@ xtra_parser_brackets_exchage(xtra_parser_brackets_p brackets, xtra_sign_p sign)
 {
     enum xtra_sign_e type = sign->type;
 
-    if (type == XTRA_SIGN_BRACKET_SQUARE_L) {
+    if (type == XTRA_SIGN_SQUARE_L) {
         brackets->square++;
-    } else if (type == XTRA_SIGN_BRACKET_SQUARE_R) {
+    } else if (type == XTRA_SIGN_SQUARE_R) {
         brackets->square--;
-    } else if (type == XTRA_SIGN_BRACKET_ROUND_L) {
+    } else if (type == XTRA_SIGN_ROUND_L) {
         brackets->round++;
-    } else if (type == XTRA_SIGN_BRACKET_ROUND_R) {
+    } else if (type == XTRA_SIGN_ROUND_R) {
         brackets->round--;
-    } else if (type == XTRA_SIGN_BRACKET_CURLY_L) {
+    } else if (type == XTRA_SIGN_CURLY_L) {
         brackets->curly++;
-    } else if (type == XTRA_SIGN_BRACKET_CURLY_R) {
+    } else if (type == XTRA_SIGN_CURLY_R) {
         brackets->curly--;
-    } else if (type == XTRA_SIGN_BRACKET_ANGLE_L) {
+    } else if (type == XTRA_SIGN_ANGLE_L) {
         brackets->angle++;
-    } else if (type == XTRA_SIGN_BRACKET_ANGLE_R) {
+    } else if (type == XTRA_SIGN_ANGLE_R) {
         brackets->angle--;
     } else if (type == XTRA_SIGN_UNALLOWED) {
         brackets->unallowed++;

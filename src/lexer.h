@@ -9,6 +9,7 @@
 #include <stdlib.h>
 #include <string.h>
 #include <ctype.h>
+#include "var.h"
 #include "sign.h"
 
 xtra_sign_p

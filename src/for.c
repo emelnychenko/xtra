@@ -17,7 +17,7 @@ xtra_for_parse(xtra_sign_p sign, long * position)
         xtra_brackets_join_conditions(sign, position);
     }
 
-    if (xtra_sign_arry_get(sign, ++(*position))->type != XTRA_SIGN_BRACKET_ROUND) {
+    if (xtra_sign_arry_get(sign, ++(*position))->type != XTRA_SIGN_ROUND) {
         // error condition
         xtra_error("Missed \"([code])\" condition in \"for\".", 0);
     }
@@ -31,7 +31,7 @@ xtra_for_parse(xtra_sign_p sign, long * position)
     // for (int i in [list, array, dictionary, hash])
     // each([array, list, dictionaty, hash], function() {});
     // foreach (any as key)
-    if (xtra_sign_arry_get(sign, ++(*position))->type != XTRA_SIGN_BRACKET_CURLY) {
+    if (xtra_sign_arry_get(sign, ++(*position))->type != XTRA_SIGN_CURLY) {
         // error condition
         xtra_error("Missed \"{[code]}\" condition in \"for\".", 0);
     }

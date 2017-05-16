@@ -50,4 +50,5 @@ xtra_var_free(xtra_var_p);
 #include "int.h"
 #include "bool.h"
 #include "double.h"
+
 #endif //EXTRA_VAR_H

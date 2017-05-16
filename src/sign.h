@@ -7,6 +7,7 @@
 
 #include <stdlib.h>
 #include <string.h>
+#include "var.h"
 #include "arry.h"
 
 enum xtra_sign_e {
@@ -23,10 +24,10 @@ enum xtra_sign_e {
     XTRA_SIGN_TRIPLE_DOT,          // ...
     XTRA_SIGN_MOD,                 // %
     XTRA_SIGN_EXP,                 // **
-    XTRA_SIGN_QUESTION_MARK,           // ?
-    XTRA_SIGN_DOUBLE_QUESTION_MARK,    // ??
-    XTRA_SIGN_QUOTATION_MARK,          // '
-    XTRA_SIGN_DOUBLE_QUOTATION_MARK,   // "
+    XTRA_SIGN_QUESTION_MARK,        // ?
+    XTRA_SIGN_DOUBLE_QUESTION_MARK, // ??
+    XTRA_SIGN_QUOTATION_MARK,       // '
+    XTRA_SIGN_DOUBLE_QUOTATION_MARK,// "
     XTRA_SIGN_COMMA,               // ,
     XTRA_SIGN_COLON,               // :
     XTRA_SIGN_DOUBLE_COLON,        // ::
@@ -68,56 +69,56 @@ enum xtra_sign_e {
     XTRA_SIGN_CASE,                // case
     XTRA_SIGN_DEFAULT,             // default
     XTRA_SIGN_BREAK,               // break
-    XTRA_SIGN_BRACKET_SQUARE,      // [...]
-    XTRA_SIGN_BRACKET_SQUARE_L,    // [
-    XTRA_SIGN_BRACKET_SQUARE_R,    // ]
-    XTRA_SIGN_BRACKET_ROUND,       // (...)
-    XTRA_SIGN_BRACKET_ROUND_L,     // (
-    XTRA_SIGN_BRACKET_ROUND_R,     // )
-    XTRA_SIGN_BRACKET_CURLY,       // {...}
-    XTRA_SIGN_BRACKET_CURLY_L,     // {
-    XTRA_SIGN_BRACKET_CURLY_R,     // }
-    XTRA_SIGN_BRACKET_ANGLE,       // <...>
-    XTRA_SIGN_BRACKET_ANGLE_L,     // <
-    XTRA_SIGN_BRACKET_ANGLE_R,     // >
-    XTRA_SIGN_EOF,                 // EOF
-    XTRA_SIGN_EOL,                 // EOL
-    XTRA_SIGN_PPD_DIR_NULL,        // #
-    XTRA_SIGN_PPD_DIR_DEFINE,      // #define
-    XTRA_SIGN_PPD_ERROR,           // #error
-    XTRA_SIGN_PPD_IF,              // #if
-    XTRA_SIGN_PPD_ELIF,            // #elif
-    XTRA_SIGN_PPD_IFDEF,           // #ifdef
-    XTRA_SIGN_PPD_IFNDEF,          // #ifndef
-    XTRA_SIGN_PPD_ENDIF,           // #endif
-    XTRA_SIGN_PPD_ELSE,            // #else
-    XTRA_SIGN_PPD_INCLUDE,         // #include
-    XTRA_SIGN_PPD_IMPORT,          // #import
-    XTRA_SIGN_PPD_LINE,            // #line
-    XTRA_SIGN_PPD_UNDEF,           // #undef
-    XTRA_SIGN_PPD_USE,             // #use #using
-    XTRA_SIGN_TYPE,                // xtra_var, var
-    XTRA_SIGN_BINARY,              // bindry 0x, 0X 0b, 0B
-    XTRA_SIGN_TRUE,                // true
-    XTRA_SIGN_FALSE,               // false
-    XTRA_SIGN_FOR,                 // for
-    XTRA_SIGN_EACH,                // each
-    XTRA_SIGN_FOREACH,             // foreach
-    XTRA_SIGN_IN,                  // in
-    XTRA_SIGN_RETURN,              // return
-    XTRA_SIGN_WHEN,                // when
-    XTRA_SIGN_THEN,                // then
-    XTRA_SIGN_AS,                  // as
-    XTRA_SIGN_IS,                  // is
-    XTRA_SIGN_END,                 // end
-    XTRA_SIGN_INTERPOLATION,       // $""
-    XTRA_SIGN_VAR,                 // xtra_var *
-    XTRA_SIGN_NULL,                // xtra_var_null, null
-    XTRA_SIGN_INT,                 // xtra_var_int, int, integer
-    XTRA_SIGN_DOUBLE,              // xtra_var_double, double, float
-    XTRA_SIGN_BOOL,                // xtra_var_bool, bool, boolean
-    XTRA_SIGN_STRING,              // xtra_var_string, str, string
-    XTRA_SIGN_CONST,               // xtra_var_const, const, define
+    XTRA_SIGN_SQUARE,               // [...]
+    XTRA_SIGN_SQUARE_L,             // [
+    XTRA_SIGN_SQUARE_R,             // ]
+    XTRA_SIGN_ROUND,                // (...)
+    XTRA_SIGN_ROUND_L,              // (
+    XTRA_SIGN_ROUND_R,              // )
+    XTRA_SIGN_CURLY,                // {...}
+    XTRA_SIGN_CURLY_L,              // {
+    XTRA_SIGN_CURLY_R,              // }
+    XTRA_SIGN_ANGLE,                // <...>
+    XTRA_SIGN_ANGLE_L,              // <
+    XTRA_SIGN_ANGLE_R,              // >
+    XTRA_SIGN_EOF,                  // EOF
+    XTRA_SIGN_EOL,                  // EOL
+    XTRA_SIGN_PPD_DIR_NULL,         // #
+    XTRA_SIGN_PPD_DIR_DEFINE,       // #define
+    XTRA_SIGN_PPD_ERROR,            // #error
+    XTRA_SIGN_PPD_IF,               // #if
+    XTRA_SIGN_PPD_ELIF,             // #elif
+    XTRA_SIGN_PPD_IFDEF,            // #ifdef
+    XTRA_SIGN_PPD_IFNDEF,           // #ifndef
+    XTRA_SIGN_PPD_ENDIF,            // #endif
+    XTRA_SIGN_PPD_ELSE,             // #else
+    XTRA_SIGN_PPD_INCLUDE,          // #include
+    XTRA_SIGN_PPD_IMPORT,           // #import
+    XTRA_SIGN_PPD_LINE,             // #line
+    XTRA_SIGN_PPD_UNDEF,            // #undef
+    XTRA_SIGN_PPD_USE,              // #use #using
+    XTRA_SIGN_TYPE,                 // xtra_var, var
+    XTRA_SIGN_BINARY,               // bindry 0x, 0X 0b, 0B
+    XTRA_SIGN_TRUE,                 // true
+    XTRA_SIGN_FALSE,                // false
+    XTRA_SIGN_FOR,                  // for
+    XTRA_SIGN_EACH,                 // each
+    XTRA_SIGN_FOREACH,              // foreach
+    XTRA_SIGN_IN,                   // in
+    XTRA_SIGN_RETURN,               // return
+    XTRA_SIGN_WHEN,                 // when
+    XTRA_SIGN_THEN,                 // then
+    XTRA_SIGN_AS,                   // as
+    XTRA_SIGN_IS,                   // is
+    XTRA_SIGN_END,                  // end
+    XTRA_SIGN_INTERPOLATION,        // $""
+    XTRA_SIGN_VAR,                  // xtra_var *
+    XTRA_SIGN_NULL,                 // xtra_var_null, null
+    XTRA_SIGN_INT,                  // xtra_var_int, int, integer
+    XTRA_SIGN_DOUBLE,               // xtra_var_double, double, float
+    XTRA_SIGN_BOOL,                 // xtra_var_bool, bool, boolean
+    XTRA_SIGN_STRING,               // xtra_var_string, str, string
+    XTRA_SIGN_CONST,                // xtra_var_const, const, define
     XTRA_SIGN_ENUM,                // xtra_var_enum, enum
     XTRA_SIGN_ARRAY,               // xtra_var_array, array
     XTRA_SIGN_DICTIONARY,          // xtra_var_array, dictionary,
@@ -152,6 +153,7 @@ typedef int                 xtra_sign_l;
 struct xtra_sign_s {
     enum xtra_sign_e type;
     xtra_arry_p      arry;
+     xtra_var_p      var;
 };
 
 xtra_sign_p
@@ -159,6 +161,12 @@ xtra_sign(enum xtra_sign_e);
 
 xtra_sign_p
 xtra_sign_with_arry(enum xtra_sign_e, xtra_arry_p);
+
+xtra_var_p
+xtra_sign_var_get(xtra_sign_p);
+
+void
+xtra_sign_var_set(xtra_sign_p, xtra_var_p);
 
 xtra_arry_p
 xtra_sign_arry(xtra_sign_p);
